@@ -149,3 +149,5 @@ footer{border-color:#dfcabe}
 .complete .buy-button{margin-top:14px}
 .complete .trust.compact{margin-top:16px}
 @media(max-width:720px){.price-card.complete{padding:42px 20px 24px}.complete .offer-main{margin-top:16px}.included-bonuses{margin-bottom:15px;padding-top:12px}.complete .trust.compact{margin-top:14px}}
+
+#oferta-simples{scroll-margin-top:12px}
