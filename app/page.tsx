@@ -36,7 +36,6 @@ const faqs=[
 ];
 
 export default function Home(){
-  const [openModule,setOpenModule]=useState<number|null>(0);
   const [openFaq,setOpenFaq]=useState<number|null>(0);
   const [upsell,setUpsell]=useState(false);
   useEffect(()=>{const f=(e:KeyboardEvent)=>e.key==='Escape'&&setUpsell(false);addEventListener('keydown',f);return()=>removeEventListener('keydown',f)},[]);
@@ -62,7 +61,7 @@ export default function Home(){
       <article className="price-card complete"><div className="popular">MAIS VENDIDO</div><h3>Oferta Completa</h3><small>VOCÊ RECEBE:</small><ul className="offer-main"><li>Protocolo Manchas Zero</li><li>Acesso Vitalício</li></ul><div className="included-bonuses"><small>BÔNUS INCLUSOS</small><ul><li>Método Asiático Pele Saudável</li><li>Rotina Anti-Oleosidade Noturna</li><li>Grupo Exclusivo no WhatsApp</li></ul></div><div className="from">De <s>R$ 67,90</s><br/>Hoje por apenas</div><div className="price-value"><span>6x de R$</span><strong>4,65</strong></div><div className="from">ou R$ 27,90 à vista no Pix</div><a id="comprar" href="#" className="buy-button">QUERO A OFERTA COMPLETA</a><Trust compact/></article>
     </div></div></section>
 
-    <section className="section guarantee"><div className="container guarantee-inner"><div className="seal"><span>7</span><b>DIAS</b><small>GARANTIA</small></div><div><p className="eyebrow">RISCO ZERO</p><h2>7 Dias de garantia</h2><p>Se dentro do prazo de garantia você concluir que o produto não atendeu às suas expectativas, basta solicitar o reembolso. Devolveremos 100% do seu dinheiro, sem burocracia.</p></div></div></section>
+    <section className="section guarantee"><div className="container guarantee-inner"><img className="guarantee-seal-image" src="/garantia-7-dias.webp" alt="Garantia de reembolso de 7 dias com devolução imediata" width="300" height="202" loading="lazy" decoding="async"/><div><p className="eyebrow">RISCO ZERO</p><h2>7 Dias de garantia</h2><p>Se dentro do prazo de garantia você concluir que o produto não atendeu às suas expectativas, basta solicitar o reembolso. Devolveremos 100% do seu dinheiro, sem burocracia.</p></div></div></section>
 
     <section className="section faq"><div className="container faq-inner"><Heading eyebrow="FAQ" title="Perguntas frequentes"/>{faqs.map((f,i)=><Accordion key={f[0]} title={f[0]} open={openFaq===i} onClick={()=>setOpenFaq(openFaq===i?null:i)}>{f[1]}</Accordion>)}</div></section>
     <footer><div className="container"><p>© 2026 Protocolo Manchas Zero</p></div></footer>

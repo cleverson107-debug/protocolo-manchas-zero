@@ -151,3 +151,6 @@ footer{border-color:#dfcabe}
 @media(max-width:720px){.price-card.complete{padding:42px 20px 24px}.complete .offer-main{margin-top:16px}.included-bonuses{margin-bottom:15px;padding-top:12px}.complete .trust.compact{margin-top:14px}}
 
 #oferta-simples{scroll-margin-top:12px}
+
+.guarantee-seal-image{display:block;width:min(260px,100%);height:auto;margin:auto;filter:drop-shadow(0 14px 24px rgba(59,40,31,.16))}
+@media(max-width:720px){.guarantee-seal-image{width:220px}}
