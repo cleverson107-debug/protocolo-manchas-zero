@@ -38,9 +38,11 @@ const faqs=[
 export default function Home(){
   const [openFaq,setOpenFaq]=useState<number|null>(0);
   const [upsell,setUpsell]=useState(false);
+  const [todayLabel,setTodayLabel]=useState(()=>formatCurrentDate());
   useEffect(()=>{const f=(e:KeyboardEvent)=>e.key==='Escape'&&setUpsell(false);addEventListener('keydown',f);return()=>removeEventListener('keydown',f)},[]);
+  useEffect(()=>{const timer=setInterval(()=>setTodayLabel(formatCurrentDate()),60_000);return()=>clearInterval(timer)},[]);
   return <main>
-    <div className="topbar">VÁLIDO SÓ HOJE, 27 DE AGOSTO DE 2026</div>
+    <div className="topbar">VÁLIDO SÓ HOJE, {todayLabel}</div>
     <section className="hero"><div className="container hero-grid">
       <HeroArt/>
       <div className="hero-copy"><p className="eyebrow">PROTOCOLO MANCHAS ZERO</p><h1>Sente <span className="soft-highlight">vergonha de mostrar seu corpo</span>, seja em público ou em momentos íntimos?</h1><p className="lead">O <span className="soft-highlight">Protocolo Manchas Zero</span> devolve a liberdade da sua pele, com axilas e virilha mais uniformes em <span className="soft-highlight">21 dias</span>.</p><a href="#oferta-simples" className="cta hero-cta">QUERO O PROTOCOLO <span>↗</span></a><Trust/></div>
@@ -74,3 +76,4 @@ function Heading({eyebrow,title,subtitle}:{eyebrow:string,title:string,subtitle?
 function Trust({compact=false}:{compact?:boolean}){const size=compact?14:19;return <div className={`trust ${compact?'compact':''}`} aria-label="Selos de confiança"><span><ShieldCheck size={size} strokeWidth={1.5} aria-hidden="true"/><b>Compra<br/>Segura</b></span><span><Trophy size={size} strokeWidth={1.5} aria-hidden="true"/><b>Satisfação<br/>Garantida</b></span><span><LockKeyhole size={size} strokeWidth={1.5} aria-hidden="true"/><b>Privacidade<br/>Protegida</b></span></div>}
 function Accordion({title,open,onClick,children}:{title:string,open:boolean,onClick:()=>void,children:React.ReactNode}){return <div className={`accordion ${open?'open':''}`}><button onClick={onClick} aria-expanded={open}><span>{title}</span><b>{open?'−':'+'}</b></button><div className="answer"><p>{children}</p></div></div>}
 function HeroArt(){return <div className="hero-art"><img src="/hero-manchas-zero.webp" alt="Protocolo Manchas Zero apresentado em diferentes dispositivos e produtos de cuidados com a pele" width="1600" height="900" fetchPriority="high" decoding="async" /></div>}
+function formatCurrentDate(){return new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'long',year:'numeric'}).format(new Date()).toUpperCase()}
