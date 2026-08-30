@@ -154,3 +154,8 @@ footer{border-color:#dfcabe}
 
 .guarantee-seal-image{display:block;width:min(260px,100%);height:auto;margin:auto;filter:drop-shadow(0 14px 24px rgba(59,40,31,.16))}
 @media(max-width:720px){.guarantee-seal-image{width:220px}}
+
+.pix-price{align-items:baseline;margin-bottom:6px}
+.pix-price span{font-size:18px;margin:0 4px 0 0;font-weight:700}
+.pix-price strong{font-size:52px}
+.installment{margin-bottom:18px;font-size:12px}
