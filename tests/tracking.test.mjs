@@ -36,12 +36,14 @@ test('preserves required attribution and protects events per plan', () => {
   assert.match(tracking, /checkoutLocks\.has\(plan\)/);
   assert.match(tracking, /checkoutLocks\.add\(plan\)/);
   assert.match(tracking, /typeof window\.fbq === 'function'/);
-  assert.match(tracking, /typeof window\.trackflow\.beginCheckout === 'function'/);
+  assert.match(tracking, /waitForTrackFlow\('beginCheckout'\)/);
+  assert.match(tracking, /waitForTrackFlow\('viewContent'\)/);
 });
 
-const runTrackingScenario = async ({ search = '', cookie = '' } = {}) => {
+const runTrackingScenario = async ({ search = '', trackFlowDelay = 0, withPricing = false } = {}) => {
   const metaEvents = [];
   const trackFlowEvents = [];
+  const trackFlowViewEvents = [];
   const destinations = [];
   let clickHandler;
   const link = {
@@ -59,28 +61,43 @@ const runTrackingScenario = async ({ search = '', cookie = '' } = {}) => {
       assign: (url) => destinations.push(url),
     },
     document: {
-      cookie,
+      cookie: '',
       readyState: 'complete',
       documentElement: { dataset: {} },
       querySelectorAll: () => [link],
-      getElementById: () => null,
+      getElementById: () => withPricing ? {} : null,
       addEventListener: (name, handler) => { if (name === 'click') clickHandler = handler; },
     },
     addEventListener: () => {},
+    IntersectionObserver: class {
+      constructor(callback) { this.callback = callback; }
+      observe() {
+        setTimeout(() => {
+          this.callback([{ isIntersecting: true }]);
+          this.callback([{ isIntersecting: true }]);
+        }, 0);
+      }
+      disconnect() {}
+    },
   };
   context.window = context;
   context.fbq = (...args) => metaEvents.push(args);
-  context.trackflow = {
-    visitorId: () => 'visitor-real-current-session',
-    beginCheckout: (payload) => trackFlowEvents.push(payload),
+  const loadTrackFlow = () => {
+    context.trackflow = {
+      visitorId: () => 'visitor-real-current-session',
+      beginCheckout: (payload) => trackFlowEvents.push(payload),
+      viewContent: (payload) => trackFlowViewEvents.push(payload),
+    };
   };
+  if (trackFlowDelay) setTimeout(loadTrackFlow, trackFlowDelay);
+  else loadTrackFlow();
   vm.runInNewContext(tracking, context);
   assert.ok(clickHandler, 'checkout click handler was not registered');
   const event = { target: { closest: () => link }, preventDefault: () => {} };
   clickHandler(event);
   clickHandler(event);
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return { link, metaEvents, trackFlowEvents, destinations };
+  await new Promise((resolve) => setTimeout(resolve, trackFlowDelay + 400));
+  return { link, metaEvents, trackFlowEvents, trackFlowViewEvents, destinations };
 };
 
 test('organic session does not invent fbclid, fbc or fbp', async () => {
@@ -111,13 +128,20 @@ test('Meta session preserves a unique fbclid and creates fbc only for that click
   assert.ok(destination.searchParams.get('_fbc').endsWith(`.${uniqueFbclid}`));
 });
 
-test('checkout click emits once and never changes the original href', async () => {
-  const result = await runTrackingScenario({ cookie: '_fbp=real-fbp; _fbc=real-fbc' });
+test('checkout waits for delayed TrackFlow, emits once and keeps the original href clean', async () => {
+  const result = await runTrackingScenario({ trackFlowDelay: 300 });
   assert.equal(result.link.href, 'https://pay.cakto.com.br/h5zh6em');
   assert.equal(result.metaEvents.filter((event) => event[1] === 'InitiateCheckout').length, 1);
   assert.equal(result.trackFlowEvents.length, 1);
   assert.equal(result.destinations.length, 1);
   const destination = new URL(result.destinations[0]);
-  assert.equal(destination.searchParams.get('_fbp'), 'real-fbp');
-  assert.equal(destination.searchParams.get('_fbc'), 'real-fbc');
+  assert.equal(destination.searchParams.has('_fbp'), false);
+  assert.equal(destination.searchParams.has('_fbc'), false);
+});
+
+test('pricing visibility waits for delayed TrackFlow and emits one viewContent', async () => {
+  const result = await runTrackingScenario({ trackFlowDelay: 300, withPricing: true });
+  assert.equal(result.metaEvents.filter((event) => event[1] === 'ViewContent').length, 1);
+  assert.equal(result.trackFlowViewEvents.length, 1);
+  assert.equal(result.trackFlowViewEvents[0].content_id, 'h5zh6em');
 });

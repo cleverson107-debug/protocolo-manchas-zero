@@ -31,6 +31,23 @@
   let metaPageViewSent = false;
   let metaViewContentSent = false;
   let trackFlowViewContentSent = false;
+  const isDevelopment = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  const debug = (message) => { if (isDevelopment) console.debug(`[tracking] ${message}`); };
+  const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+  const waitForTrackFlow = async (methodName, timeout = 2000) => {
+    const startedAt = Date.now();
+    while (Date.now() - startedAt < timeout) {
+      try {
+        if (window.trackflow && typeof window.trackflow[methodName] === 'function') {
+          debug('tracker carregado');
+          return window.trackflow[methodName].bind(window.trackflow);
+        }
+      } catch {}
+      await delay(50);
+    }
+    return null;
+  };
 
   const readCookie = (name) => {
     const prefix = `${name}=`;
@@ -95,41 +112,40 @@
     return true;
   };
 
-  const sendViewContent = () => {
+  const sendViewContent = async () => {
     const product = products.complete;
     if (!metaViewContentSent && typeof window.fbq === 'function') {
       metaViewContentSent = true;
       window.fbq('track', 'ViewContent', metaPayload(product));
     }
-    if (!trackFlowViewContentSent && window.trackflow && typeof window.trackflow.viewContent === 'function') {
-      trackFlowViewContentSent = true;
-      window.trackflow.viewContent(trackFlowPayload(product));
+    if (!trackFlowViewContentSent) {
+      const viewContent = await waitForTrackFlow('viewContent');
+      if (viewContent && !trackFlowViewContentSent) {
+        trackFlowViewContentSent = true;
+        viewContent(trackFlowPayload(product));
+        debug('viewContent enviado');
+      }
     }
-    return metaViewContentSent && trackFlowViewContentSent;
   };
 
-  const beginCheckout = (product, destination) => {
+  const beginCheckout = async (product) => {
     try {
       if (typeof window.fbq === 'function') {
         window.fbq('track', 'InitiateCheckout', metaPayload(product));
       }
     } catch {}
 
-    let attempts = 0;
-    const finish = () => location.assign(destination);
-    const sendTrackFlow = () => {
-      attempts += 1;
+    const trackFlowBeginCheckout = await waitForTrackFlow('beginCheckout');
+    if (trackFlowBeginCheckout) {
       try {
-        if (window.trackflow && typeof window.trackflow.beginCheckout === 'function') {
-          window.trackflow.beginCheckout(trackFlowPayload(product));
-          setTimeout(finish, 80);
-          return;
-        }
+        trackFlowBeginCheckout(trackFlowPayload(product));
+        debug('beginCheckout enviado');
+        await delay(300);
       } catch {}
-      if (attempts < 5) setTimeout(sendTrackFlow, 20);
-      else finish();
-    };
-    sendTrackFlow();
+    }
+    const destination = createCheckoutUrl(product.checkout_url);
+    debug('redirecionamento iniciado');
+    location.assign(destination);
   };
 
   const initialize = () => {
@@ -145,12 +161,7 @@
       const observer = new IntersectionObserver((entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
         observer.disconnect();
-        let attempts = 0;
-        const attempt = () => {
-          attempts += 1;
-          if (!sendViewContent() && attempts < 50) setTimeout(attempt, 100);
-        };
-        attempt();
+        void sendViewContent();
       }, { rootMargin: '100px' });
       observer.observe(pricing);
     }
@@ -164,8 +175,7 @@
       event.preventDefault();
       if (checkoutLocks.has(plan)) return;
       checkoutLocks.add(plan);
-      const destination = createCheckoutUrl(product.checkout_url);
-      beginCheckout(product, destination);
+      void beginCheckout(product);
     }, true);
 
     addEventListener('pageshow', (event) => {
