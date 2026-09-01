@@ -5,18 +5,21 @@
       content_name: 'Protocolo Manchas Zero - Oferta Completa',
       value: 27.90,
       currency: 'BRL',
+      checkout_url: 'https://pay.cakto.com.br/h5zh6em',
     },
     upgrade: {
       content_id: '5xyu9sm',
       content_name: 'Protocolo Manchas Zero - Upgrade com Bonus',
       value: 21.90,
       currency: 'BRL',
+      checkout_url: 'https://pay.cakto.com.br/5xyu9sm',
     },
     simple: {
       content_id: '3bsv9to_1077048',
       content_name: 'Protocolo Manchas Zero - Oferta Simples',
       value: 17.90,
       currency: 'BRL',
+      checkout_url: 'https://pay.cakto.com.br/3bsv9to_1077048',
     },
   };
 
@@ -32,39 +35,40 @@
   const readCookie = (name) => {
     const prefix = `${name}=`;
     const entry = document.cookie.split(';').map((part) => part.trim()).find((part) => part.startsWith(prefix));
-    return entry ? entry.slice(prefix.length) : '';
+    if (!entry) return '';
+    try { return decodeURIComponent(entry.slice(prefix.length)); }
+    catch { return entry.slice(prefix.length); }
   };
 
-  const rawAttribution = () => location.search.slice(1).split('&').filter((part) => {
-    if (!part) return false;
-    const rawName = part.split('=', 1)[0];
-    return attributionNames.has(rawName);
-  });
+  const getRealFbc = () => {
+    const existingFbc = readCookie('_fbc');
+    if (existingFbc) return existingFbc;
+    const fbclid = new URLSearchParams(location.search).get('fbclid');
+    return fbclid ? `fb.1.${Date.now()}.${fbclid}` : '';
+  };
 
-  const decorateCheckoutUrl = (href) => {
-    const [base, hash = ''] = href.split('#', 2);
-    const [path, query = ''] = base.split('?', 2);
-    const existingNames = new Set(query.split('&').filter(Boolean).map((part) => part.split('=', 1)[0]));
-    const additions = rawAttribution().filter((part) => !existingNames.has(part.split('=', 1)[0]));
-    let trackFlowVisitor = readCookie('tf_visitor') || readCookie('_tf_vid');
-    if (!trackFlowVisitor) {
-      try {
-        trackFlowVisitor = (window.trackflow && typeof window.trackflow.visitorId === 'function' && window.trackflow.visitorId())
-          || localStorage.getItem('tf_visitor')
-          || localStorage.getItem('_tf_vid')
-          || '';
-      } catch { trackFlowVisitor = ''; }
-    }
-    const identifiers = {
-      _fbp: readCookie('_fbp'),
-      _fbc: readCookie('_fbc'),
-      tf_visitor: trackFlowVisitor,
-    };
-    Object.entries(identifiers).forEach(([name, value]) => {
-      if (value && !existingNames.has(name)) additions.push(`${name}=${encodeURIComponent(value)}`);
+  const createCheckoutUrl = (originalUrl) => {
+    const destination = new URL(originalUrl);
+    const currentParams = new URLSearchParams(location.search);
+    attributionNames.forEach((name) => {
+      const value = currentParams.get(name);
+      if (value) destination.searchParams.set(name, value);
     });
-    const combined = [query, ...additions].filter(Boolean).join('&');
-    return `${path}${combined ? `?${combined}` : ''}${hash ? `#${hash}` : ''}`;
+
+    const fbp = readCookie('_fbp');
+    const fbc = getRealFbc();
+    if (fbp) destination.searchParams.set('_fbp', fbp);
+    if (fbc) destination.searchParams.set('_fbc', fbc);
+
+    let visitorId = '';
+    try {
+      if (window.trackflow && typeof window.trackflow.visitorId === 'function') {
+        visitorId = window.trackflow.visitorId() || '';
+      }
+    } catch {}
+    if (visitorId) destination.searchParams.set('tf_visitor', visitorId);
+
+    return destination.toString();
   };
 
   const metaPayload = (product) => ({
@@ -136,10 +140,6 @@
     };
     attemptPageView();
 
-    document.querySelectorAll('a[data-checkout-plan]').forEach((link) => {
-      link.href = decorateCheckoutUrl(link.href);
-    });
-
     const pricing = document.getElementById('precos');
     if (pricing) {
       const observer = new IntersectionObserver((entries) => {
@@ -164,9 +164,13 @@
       event.preventDefault();
       if (checkoutLocks.has(plan)) return;
       checkoutLocks.add(plan);
-      const destination = decorateCheckoutUrl(link.href);
+      const destination = createCheckoutUrl(product.checkout_url);
       beginCheckout(product, destination);
     }, true);
+
+    addEventListener('pageshow', (event) => {
+      if (event.persisted) checkoutLocks.clear();
+    });
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize, { once: true });
