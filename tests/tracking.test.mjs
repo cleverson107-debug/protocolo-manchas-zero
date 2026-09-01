@@ -11,8 +11,8 @@ const browserCode = `${layout}\n${page}\n${tracking}`;
 test('installs Meta and TrackFlow exactly once', () => {
   assert.equal((layout.match(/813194448363424/g) || []).length, 2);
   assert.equal((layout.match(/app\.upnexa\.com\.br\/api\/public\/tracker\.js/g) || []).length, 1);
-  assert.equal((layout.match(/data-site="tf_Bzm6TqPn820c1sG_"/g) || []).length, 1);
-  assert.equal((layout.match(/data-endpoint="\/api\/trackflow"/g) || []).length, 1);
+  assert.equal((layout.match(/tf_Bzm6TqPn820c1sG_/g) || []).length, 1);
+  assert.equal((layout.match(/dataset\.endpoint='\/api\/trackflow'/g) || []).length, 1);
   assert.equal((browserCode.match(/fbq\('track', 'PageView'\)/g) || []).length, 1);
   assert.match(tracking, /metaPageViewSent/);
 });

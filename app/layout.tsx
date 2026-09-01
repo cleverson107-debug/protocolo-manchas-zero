@@ -34,12 +34,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
-        <script dangerouslySetInnerHTML={{__html:`(()=>{if('scrollRestoration'in history)history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname+location.search);scrollTo(0,0);addEventListener('DOMContentLoaded',()=>scrollTo(0,0),{once:true})})()`}} />
-        <script dangerouslySetInnerHTML={{__html:`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','813194448363424');`}} />
-        <script async src="https://app.upnexa.com.br/api/public/tracker.js" data-site="tf_Bzm6TqPn820c1sG_" data-endpoint="/api/trackflow" />
-        <script defer src="/offer-tracking.js" />
         <link rel="preload" as="image" href="/hero-manchas-zero-mobile.webp" media="(max-width: 720px)" fetchPriority="high" />
         <link rel="preload" as="image" href="/hero-manchas-zero.webp" media="(min-width: 721px)" fetchPriority="high" />
+        <script dangerouslySetInnerHTML={{__html:`(()=>{if('scrollRestoration'in history)history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname+location.search);scrollTo(0,0);addEventListener('DOMContentLoaded',()=>scrollTo(0,0),{once:true})})()`}} />
+        <script dangerouslySetInnerHTML={{__html:`(()=>{if(window.fbq)return;const q=function(){q.callMethod?q.callMethod.apply(q,arguments):q.queue.push(arguments)};window.fbq=q;window._fbq=q;q.push=q;q.loaded=!0;q.version='2.0';q.queue=[];q('init','813194448363424');const load=()=>{const meta=document.createElement('script');meta.async=true;meta.fetchPriority='low';meta.src='https://connect.facebook.net/en_US/fbevents.js';document.head.appendChild(meta);const track=document.createElement('script');track.async=true;track.fetchPriority='low';track.src='https://app.upnexa.com.br/api/public/tracker.js';track.dataset.site='tf_Bzm6TqPn820c1sG_';track.dataset.endpoint='/api/trackflow';document.head.appendChild(track)};addEventListener('load',()=>setTimeout(load,0),{once:true})})()`}} />
+        <script defer src="/offer-tracking.js" />
       </head>
       <body
         className={`${bricolageGrotesque.variable} antialiased`}
