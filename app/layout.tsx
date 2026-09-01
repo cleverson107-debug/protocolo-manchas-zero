@@ -34,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
+        <script dangerouslySetInnerHTML={{__html:`(()=>{if('scrollRestoration'in history)history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname+location.search);scrollTo(0,0);addEventListener('DOMContentLoaded',()=>scrollTo(0,0),{once:true})})()`}} />
         <link rel="preload" as="image" href="/hero-manchas-zero-mobile.webp" media="(max-width: 720px)" fetchPriority="high" />
         <link rel="preload" as="image" href="/hero-manchas-zero.webp" media="(min-width: 721px)" fetchPriority="high" />
       </head>
