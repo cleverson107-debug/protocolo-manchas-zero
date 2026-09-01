@@ -6,6 +6,7 @@ import vm from 'node:vm';
 const layout = readFileSync(new URL('../app/layout.tsx', import.meta.url), 'utf8');
 const page = readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8');
 const tracking = readFileSync(new URL('../public/offer-tracking.js', import.meta.url), 'utf8');
+const staticOptimizer = readFileSync(new URL('../scripts/optimize-static-html.mjs', import.meta.url), 'utf8');
 const browserCode = `${layout}\n${page}\n${tracking}`;
 
 test('installs Meta and TrackFlow exactly once', () => {
@@ -15,6 +16,12 @@ test('installs Meta and TrackFlow exactly once', () => {
   assert.equal((layout.match(/dataset\.endpoint='\/api\/trackflow'/g) || []).length, 1);
   assert.equal((browserCode.match(/fbq\('track', 'PageView'\)/g) || []).length, 1);
   assert.match(tracking, /metaPageViewSent/);
+});
+
+test('removes unused framework hydration from the static landing page', () => {
+  assert.match(staticOptimizer, /modulepreload/);
+  assert.match(staticOptimizer, /_next\\\/static\\\/chunks/);
+  assert.match(staticOptimizer, /offer-tracking\.js/);
 });
 
 test('does not send financial browser events', () => {
