@@ -25,6 +25,7 @@
     'campaign_id', 'adset_id', 'ad_id', 'fbclid',
   ]);
   const checkoutLocks = new Set();
+  let metaPageViewSent = false;
   let metaViewContentSent = false;
   let trackFlowViewContentSent = false;
 
@@ -81,6 +82,15 @@
     currency: product.currency,
   });
 
+  const sendMetaPageView = () => {
+    if (metaPageViewSent) return true;
+    if (typeof window.fbq !== 'function') return false;
+    metaPageViewSent = true;
+    window.fbq('track', 'PageView');
+    document.documentElement.dataset.metaPageView = 'sent';
+    return true;
+  };
+
   const sendViewContent = () => {
     const product = products.complete;
     if (!metaViewContentSent && typeof window.fbq === 'function') {
@@ -119,6 +129,13 @@
   };
 
   const initialize = () => {
+    let pageViewAttempts = 0;
+    const attemptPageView = () => {
+      pageViewAttempts += 1;
+      if (!sendMetaPageView() && pageViewAttempts < 50) setTimeout(attemptPageView, 100);
+    };
+    attemptPageView();
+
     document.querySelectorAll('a[data-checkout-plan]').forEach((link) => {
       link.href = decorateCheckoutUrl(link.href);
     });
