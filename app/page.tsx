@@ -62,7 +62,7 @@ export default function Home(){
     <section className="section guarantee"><div className="container guarantee-inner"><img className="guarantee-seal-image" src="/garantia-7-dias.webp" alt="Garantia de reembolso de 7 dias com devolução imediata" width="300" height="202" loading="lazy" decoding="async"/><div><p className="eyebrow">RISCO ZERO</p><h2>7 Dias de garantia</h2><p>Se dentro do prazo de garantia você concluir que o produto não atendeu às suas expectativas, basta solicitar o reembolso. Devolveremos 100% do seu dinheiro, sem burocracia.</p></div></div></section>
 
     <section className="section faq"><div className="container faq-inner"><Heading eyebrow="FAQ" title="Perguntas frequentes"/>{faqs.map((f,i)=><details className="accordion" key={f[0]} open={i===0}><summary><span>{f[0]}</span><b aria-hidden="true">+</b></summary><div className="answer"><p>{f[1]}</p></div></details>)}</div></section>
-    <footer><div className="container"><p>© 2026 Protocolo Manchas Zero</p></div></footer>
+    <footer className="site-footer"><div className="container footer-inner"><strong>Protocolo Manchas Zero</strong><p>Autocuidado, liberdade e confiança para você se sentir bem com a própria pele.</p><small>© 2026 Protocolo Manchas Zero. Todos os direitos reservados.</small></div></footer>
 
     <script dangerouslySetInnerHTML={{__html:`(()=>{const mobile=matchMedia('(max-width:720px)').matches;const load=e=>{if(e.dataset.lazySrc){e.src=mobile?e.dataset.lazyMobile:e.dataset.lazySrc;delete e.dataset.lazySrc;delete e.dataset.lazyMobile}};const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){load(x.target);io.unobserve(x.target)}}),{rootMargin:'500px'});document.querySelectorAll('img[data-lazy-src]').forEach(e=>io.observe(e))})()`}} />
 
