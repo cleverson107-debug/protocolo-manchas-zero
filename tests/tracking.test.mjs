@@ -12,6 +12,7 @@ test('installs Meta and TrackFlow exactly once', () => {
   assert.equal((layout.match(/813194448363424/g) || []).length, 2);
   assert.equal((layout.match(/app\.upnexa\.com\.br\/api\/public\/tracker\.js/g) || []).length, 1);
   assert.equal((layout.match(/data-site="tf_Bzm6TqPn820c1sG_"/g) || []).length, 1);
+  assert.equal((layout.match(/data-endpoint="\/api\/trackflow"/g) || []).length, 1);
   assert.equal((browserCode.match(/fbq\('track', 'PageView'\)/g) || []).length, 1);
   assert.match(tracking, /metaPageViewSent/);
 });
@@ -96,7 +97,7 @@ const runTrackingScenario = async ({ search = '', trackFlowDelay = 0, withPricin
   const event = { target: { closest: () => link }, preventDefault: () => {} };
   clickHandler(event);
   clickHandler(event);
-  await new Promise((resolve) => setTimeout(resolve, trackFlowDelay + 400));
+  await new Promise((resolve) => setTimeout(resolve, trackFlowDelay + 1100));
   return { link, metaEvents, trackFlowEvents, trackFlowViewEvents, destinations };
 };
 

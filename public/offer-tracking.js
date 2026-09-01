@@ -140,7 +140,7 @@
       try {
         trackFlowBeginCheckout(trackFlowPayload(product));
         debug('beginCheckout enviado');
-        await delay(300);
+        await delay(1000);
       } catch {}
     }
     const destination = createCheckoutUrl(product.checkout_url);
