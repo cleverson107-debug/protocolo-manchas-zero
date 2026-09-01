@@ -20,12 +20,11 @@ const modules=[
   },
 ];
 const feedbacks=[
-  ['Depoimento 1','400×600'],
-  ['Depoimento 2','400×600'],
-  ['Depoimento 3','400×600'],
-  ['Depoimento 4','400×600'],
-  ['Depoimento 5','400×600'],
-  ['Depoimento 6','400×600'],
+  {image:'/depoimento-1.webp',width:941,height:1672,label:'Depoimento de Camila'},
+  {image:'/depoimento-2.webp',width:941,height:1672,label:'Depoimento de Sandra'},
+  {image:'/depoimento-3.webp',width:941,height:1672,label:'Depoimento de Letícia'},
+  {image:'/depoimento-4.webp',width:902,height:1743,label:'Depoimento de Patrícia'},
+  {image:'/depoimento-5.webp',width:898,height:1751,label:'Depoimento de Maria'},
 ];
 const faqs=[
   ['Quanto tempo leva para ver resultados?','Muitas clientes relatam mudanças visíveis em até 21 dias, seguindo o protocolo diariamente.'],
@@ -48,7 +47,7 @@ export default function Home(){
       <div className="hero-copy"><p className="eyebrow">PROTOCOLO MANCHAS ZERO</p><h1>Sente <span className="soft-highlight">vergonha de mostrar seu corpo</span>, seja em público ou em momentos íntimos?</h1><p className="lead">O <span className="soft-highlight">Protocolo Manchas Zero</span> devolve a liberdade da sua pele, com axilas e virilha mais uniformes em <span className="soft-highlight">21 dias</span>.</p><a href="#oferta-simples" className="cta hero-cta">QUERO O PROTOCOLO <span>↗</span></a><Trust/></div>
     </div></section>
 
-    <section className="section proof"><div className="container"><div className="proof-heading"><p>Elas se escondiam.</p><h2>Hoje mostram seus resultados.</h2></div></div><div className="marquee"><div className="marquee-track">{[...feedbacks,...feedbacks].map((f,i)=><article className="feedback" key={i}><p>{f[0]} {f[1]}</p></article>)}</div></div></section>
+    <section className="section proof"><div className="container"><div className="proof-heading"><p>Elas se escondiam.</p><h2>Hoje mostram seus resultados.</h2></div></div><div className="marquee"><div className="marquee-track">{[...feedbacks,...feedbacks].map((feedback,i)=><article className="feedback" key={`${feedback.image}-${i}`} aria-hidden={i>=feedbacks.length}><img src={feedback.image} alt={i<feedbacks.length?feedback.label:''} width={feedback.width} height={feedback.height} loading="lazy" decoding="async"/></article>)}</div></div></section>
 
     <section className="section modules"><div className="container"><Heading eyebrow="MÓDULOS" title="Tudo o que você receberá assim que confirmar sua compra"/><div className="cover-scroll">{modules.map((module,i)=><article className="module-cover" key={module.title}><img className="module-image" src={module.image} alt={`Arte do módulo ${i+1}: ${module.title}`} width="1100" height="825" loading="lazy" decoding="async"/><small>Módulo {i+1}</small><strong>{module.title}</strong><p className="module-description">{module.description}</p></article>)}</div></div></section>
 
