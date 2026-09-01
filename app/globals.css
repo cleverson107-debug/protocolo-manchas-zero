@@ -121,6 +121,7 @@ body{background:var(--protocol-cream);color:var(--protocol-brown)}
 .hero-copy .hero-cta:hover{background:#c97872}
 .hero-art{width:640px;max-width:100%;aspect-ratio:16/9;border-radius:14px;background:#f4e5d9;box-shadow:0 18px 42px rgba(92,53,38,.14)}
 .hero-art img{object-fit:contain}
+.hero-art picture{display:block;width:100%;height:100%}
 .proof,.bonuses,.guarantee{background:var(--protocol-blush)}
 .modules,.pricing,.faq,footer{background:var(--protocol-cream)}
 .module-cover,.bonus,.price-card.basic{background:var(--protocol-sand)}
@@ -167,3 +168,36 @@ footer{border-color:#dfcabe}
 .proof .feedback{flex:0 0 320px;width:320px;height:auto;min-height:0;padding:0;border:0;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 12px 30px rgba(89,52,43,.12)}
 .proof .feedback img{display:block;width:100%;height:auto;object-fit:contain}
 @media(max-width:720px){.proof .marquee-track{gap:12px;animation-duration:64s}.proof .feedback{flex-basis:min(82vw,320px);width:min(82vw,320px);border-radius:12px}}
+
+/* Mobile performance: defer off-screen layout and keep motion compositor-friendly. */
+.modules,.bonuses,.pricing,.guarantee,.faq,footer{content-visibility:auto;contain-intrinsic-size:auto 900px}
+.basic-buy-button{display:flex;width:100%;align-items:center;justify-content:center;border:1px solid #bdbdbd;border-radius:10px;padding:17px 12px;margin:0;background:#efefef;color:#2b2b2b;font-size:15px;font-weight:900;cursor:pointer}
+.basic-buy-button:hover{background:#e8e8e8}
+.modal-bg{visibility:hidden;opacity:0;pointer-events:none;transition:opacity .18s ease,visibility 0s linear .18s}
+.modal-bg:target{visibility:visible;opacity:1;pointer-events:auto;transition:opacity .18s ease}
+.modal-backdrop{position:absolute;inset:0}
+.upgrade-modal{z-index:1}
+.close{display:grid;place-items:center;color:inherit;text-decoration:none}
+.decline{display:block;width:max-content}
+.accordion{border-bottom:1px solid #ddd}
+.accordion summary{list-style:none;display:flex;justify-content:space-between;align-items:center;text-align:left;padding:22px 0;font-weight:800;cursor:pointer}
+.accordion summary::-webkit-details-marker{display:none}
+.accordion summary b{font-size:24px;transition:transform .2s ease}
+.accordion[open] summary b{transform:rotate(45deg)}
+.accordion .answer{display:block}
+.accordion .answer p{padding-bottom:22px}
+
+@media(max-width:720px){
+  html{scroll-behavior:auto}
+  .section{padding:58px 0}
+  .hero{min-height:auto}
+  .proof .marquee{overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:18px}
+  .proof .marquee::-webkit-scrollbar{display:none}
+  .proof .marquee-track{animation:none;padding-inline:20px;width:max-content}
+  .proof .feedback{scroll-snap-align:center}
+  .proof .feedback:nth-child(n+6){display:none}
+  .price-card.complete,.complete .buy-button,.upgrade-modal .cta{animation:none}
+  .complete .buy-button{box-shadow:0 10px 24px rgba(189,98,104,.3)}
+  .hero-copy .hero-cta:before{animation-duration:7s}
+  .modules,.bonuses,.pricing,.guarantee,.faq,footer{contain-intrinsic-size:auto 760px}
+}
