@@ -219,3 +219,14 @@ footer{border-color:#dfcabe}
 .site-footer small{margin-top:9px;color:#d7b9a7;font-size:11px;line-height:1.4}
 @media(max-width:720px){.site-footer{padding:36px 0}.site-footer .footer-inner{gap:8px}.site-footer strong{font-size:18px}.site-footer p{font-size:12px}.site-footer small{font-size:10px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.proof .marquee{overflow-x:auto}.proof .marquee-track{animation:none;will-change:auto}.proof .feedback:nth-child(n+6){display:none}}
+
+/* Ordem de leitura da Hero no mobile: headline, imagem e subheadline. */
+@media(max-width:720px){
+  .hero-grid{display:flex;flex-direction:column;gap:24px}
+  .hero-copy{display:contents}
+  .hero-copy h1{order:0}
+  .hero-art{order:1}
+  .hero-copy .lead{order:2}
+  .hero-copy .hero-cta{order:3;margin-top:0}
+  .hero-copy .trust{order:4;margin-top:2px}
+}
