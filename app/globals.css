@@ -203,6 +203,14 @@ footer{border-color:#dfcabe}
   .modules,.bonuses,.pricing,.guarantee,.faq,footer{contain-intrinsic-size:auto 760px}
 }
 
+/* Módulos com a mesma proporção e hierarquia visual dos cards de bônus. */
+.modules .module-cover{height:auto;min-height:0;padding:14px;gap:10px;border:0;border-radius:10px;justify-content:flex-start;box-shadow:none}
+.modules .module-cover>small{order:-1;margin:0;text-align:center;color:#5f5f5f;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.modules .module-image{order:0;width:100%;height:auto;aspect-ratio:4/3;margin:0;border-radius:8px;object-fit:contain;background:#fff7f1}
+.modules .module-cover>strong{order:1;margin:3px 0 0;font-size:20px;line-height:1.15;text-transform:none}
+.modules .module-description{order:2;margin:0;color:#666;font-size:13px;line-height:1.5}
+@media(max-width:720px){.modules .cover-scroll{max-width:310px}.modules .module-cover{height:auto;min-height:0}.modules .module-image{margin:0}.modules .module-cover>strong{font-size:20px}}
+
 /* Rodapé institucional */
 .site-footer{padding:44px 0;background:var(--protocol-brown);color:#fff;border-top:0}
 .site-footer .footer-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center}
