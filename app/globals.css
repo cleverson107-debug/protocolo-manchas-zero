@@ -171,7 +171,7 @@ footer{border-color:#dfcabe}
 @media(max-width:720px){.proof .marquee-track{gap:12px;animation-duration:64s}.proof .feedback{flex-basis:min(82vw,320px);width:min(82vw,320px);border-radius:12px}}
 
 /* Mobile performance: defer off-screen layout and keep motion compositor-friendly. */
-.modules,.bonuses,.pricing,.guarantee,.faq,footer{content-visibility:auto;contain-intrinsic-size:auto 900px}
+.proof,.modules,.bonuses,.pricing,.guarantee,.faq,footer{content-visibility:auto;contain-intrinsic-size:auto 900px}
 .basic-buy-button{display:flex;width:100%;align-items:center;justify-content:center;border:1px solid #bdbdbd;border-radius:10px;padding:17px 12px;margin:0;background:#efefef;color:#2b2b2b;font-size:15px;font-weight:900;cursor:pointer}
 .basic-buy-button:hover{background:#e8e8e8}
 .modal-bg{visibility:hidden;opacity:0;pointer-events:none;transition:opacity .18s ease,visibility 0s linear .18s}
