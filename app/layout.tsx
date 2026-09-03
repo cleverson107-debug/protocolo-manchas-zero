@@ -10,18 +10,18 @@ const bricolageGrotesque = Bricolage_Grotesque({
 
 export const metadata: Metadata = {
   title: 'Protocolo Manchas Zero',
-  description: 'Um protocolo de cuidados para axilas e virilha mais uniformes em 21 dias.',
+  description: 'Aprenda a identificar o que pode estar por trás de manchas, acne e excesso de oleosidade e melhore sua rotina de cuidados em até 21 dias.',
   metadataBase: new URL('https://manchaszero.upnexa.com.br'),
   openGraph: {
     title: 'Protocolo Manchas Zero',
-    description: 'Mais liberdade e confiança para mostrar sua pele.',
+    description: 'Entenda o que sua pele precisa e conquiste uma aparência mais uniforme, limpa e saudável em até 21 dias.',
     images: ['/hero-manchas-zero.webp'],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Protocolo Manchas Zero',
-    description: 'Mais liberdade e confiança para mostrar sua pele.',
+    description: 'Entenda o que sua pele precisa e conquiste uma aparência mais uniforme, limpa e saudável em até 21 dias.',
     images: ['/hero-manchas-zero.webp'],
   },
 };
